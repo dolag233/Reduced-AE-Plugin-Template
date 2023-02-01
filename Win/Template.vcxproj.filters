@@ -22,11 +22,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="PiPL.rc">
-      <Filter>PiPL</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\util\AEGP_SuiteHandler.cpp">
       <Filter>source\utils</Filter>
     </ClCompile>
