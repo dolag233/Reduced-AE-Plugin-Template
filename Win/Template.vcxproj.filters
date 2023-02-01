@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{4ee0dadd-8c83-4741-9929-dbcc046fc903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\main">
+      <UniqueIdentifier>{3f7b316b-43ab-42bb-a417-ad16250cbec2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="headers">
+      <UniqueIdentifier>{e1cf207c-552f-4fd4-96ed-76ccc9ebdf72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="headers\main">
+      <UniqueIdentifier>{1af50ece-2864-45ca-8973-efee88c30c2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PiPL">
+      <UniqueIdentifier>{b69af876-1d29-49fa-9917-fd2efa165225}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="source\utils">
+      <UniqueIdentifier>{2ff6975c-9703-40f4-86fe-d8f3fa5a0138}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PiPL.rc">
+      <Filter>PiPL</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\util\AEGP_SuiteHandler.cpp">
+      <Filter>source\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\util\MissingSuiteError.cpp">
+      <Filter>source\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Template.cpp">
+      <Filter>source\main</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Template.h">
+      <Filter>headers\main</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\PiPL\PiPL.r">
+      <Filter>PiPL</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>
