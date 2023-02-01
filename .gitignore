@@ -1,0 +1,5 @@
+Win/build
+Win/x64
+Win/x86
+Win/.vs
+*.rc
