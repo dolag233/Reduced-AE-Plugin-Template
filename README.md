@@ -10,6 +10,7 @@ This is a reduced AE plugin template to replace the Skeleton in the AE SDK. You 
 + Support MFR by default.
 + More organized and portable project structure.
 + Compile it in one click without tedious configuration.
++ Standalone in one folder, no weird dependencies.
 
 ## Note
 
