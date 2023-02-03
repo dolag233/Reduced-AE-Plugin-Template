@@ -75,6 +75,26 @@ Render(
 	return err;
 }
 
+extern "C" DllExport
+PF_Err PluginDataEntryFunction(
+	PF_PluginDataPtr inPtr,
+	PF_PluginDataCB inPluginDataCallBackPtr,
+	SPBasicSuite * inSPBasicSuitePtr,
+	const char* inHostName,
+	const char* inHostVersion) {
+	PF_Err result = PF_Err_INVALID_CALLBACK;
+
+	result = PF_REGISTER_EFFECT(
+		inPtr,
+		inPluginDataCallBackPtr,
+		"Template", // Name
+		"ADBE Template", // Match Name
+		"Sample Plug-ins", // Category
+		AE_RESERVED_INFO); // Reserved Info
+
+	return result;
+}
+
 PF_Err
 EffectMain(
 	PF_Cmd cmd,
