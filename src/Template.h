@@ -54,4 +54,4 @@ extern "C" {
 
 }
 
-#endif // SKELETON_H
+#endif
