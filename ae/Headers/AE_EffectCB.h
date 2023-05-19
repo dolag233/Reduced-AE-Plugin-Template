@@ -232,8 +232,6 @@ enum {
 
 	PF_Xfer_NUM_MODES
 };
-typedef A_long    PF_TransferMode;
-typedef PF_TransferMode PF_XferMode;	
 
 // obsolete xfer mode names
 enum {
@@ -241,16 +239,6 @@ enum {
 	PF_Xfer_SHADE = PF_Xfer_LINEAR_BURN,
 	PF_Xfer_INTENSE_LIGHT = PF_Xfer_VIVID_LIGHT
 };
-
-typedef struct {
-    PF_TransferMode     xfer;
-    A_long				rand_seed;  // for PF_Xfer_DISSOLVE_RANDOMIZED
-    A_u_char		opacity;	// 0 - 255	
-    PF_Boolean          rgb_only;   // ignored for PF_Xfer_MULTIPLY_ALPHA modes
-    A_u_short		opacitySu;	// for deep color only
-} PF_CompositeMode;
-
-
 
 #define PF_TransferMode_ZERO_SRC_ALPHA_CLEARS_DST_ALPHA(TMODE) \
 	((TMODE) == PF_Xfer_MULTIPLY_ALPHA ||		\

@@ -4,8 +4,14 @@
 //	do not include DVA headers here
 #include <AE_Effect.h>
 #include <AE_EffectCB.h>
+#include <string.h>
 
 // requires the explicit use of 'def' for the struct name
+
+/* not quite strncpy because this always null terminates - unless SZ <= 0 */
+#define PF_STRNNCPY(DST, SRC, SZ) \
+	::strncpy((DST), (SRC), (SZ)); \
+	if ((SZ) > 0U) (DST)[(SZ)-1] = 0
 
 #define        PF_ParamDef_IS_PUI_FLAG_SET(_defP, _puiFlag)        \
   (((_defP)->ui_flags & _puiFlag) != 0)
@@ -18,7 +24,7 @@
 	do {\
 		PF_Err	priv_err = PF_Err_NONE; \
 		def.param_type = PF_Param_COLOR; \
-		PF_STRCPY(def.name, (NAME) ); \
+		PF_STRNNCPY(def.name, (NAME), sizeof(def.name) ); \
 		def.u.cd.value.red = (RED); \
 		def.u.cd.value.green = (GREEN); \
 		def.u.cd.value.blue = (BLUE); \
@@ -33,7 +39,7 @@
 		PF_Err	priv_err = PF_Err_NONE; \
 		def.param_type = PF_Param_ARBITRARY_DATA; \
 		def.flags = (PARAM_FLAGS); \
-		PF_STRCPY(def.name, (NAME) ); \
+		PF_STRNNCPY(def.name, (NAME), sizeof(def.name) ); \
 		def.ui_width = (WIDTH);\
 	    def.ui_height = (HEIGHT);\
 		def.ui_flags = (PUI_FLAGS); \
@@ -52,7 +58,7 @@
 	do {\
 		PF_Err	priv_err = PF_Err_NONE; \
 		def.param_type = PF_Param_SLIDER; \
-		PF_STRCPY(def.name, (NAME) ); \
+		PF_STRNNCPY(def.name, (NAME), sizeof(def.name) ); \
 		def.u.sd.value_str[0] = '\0'; \
 		def.u.sd.value_desc[0] = '\0'; \
 		def.u.sd.valid_min = (VALID_MIN); \
@@ -68,7 +74,7 @@
 	do {\
 		PF_Err	priv_err = PF_Err_NONE; \
 		def.param_type = PF_Param_FIX_SLIDER; \
-		PF_STRCPY(def.name, (NAME) ); \
+		PF_STRNNCPY(def.name, (NAME), sizeof(def.name) ); \
 		def.u.fd.value_str[0]	= '\0'; \
 		def.u.fd.value_desc[0]	= '\0'; \
 		def.u.fd.valid_min = (PF_Fixed)((VALID_MIN) * 65536.0); \
@@ -88,7 +94,7 @@
 	do {\
 		PF_Err	priv_err = PF_Err_NONE; \
 		def.param_type = PF_Param_FLOAT_SLIDER; \
-		PF_STRCPY(def.name, (NAME) ); \
+		PF_STRNNCPY(def.name, (NAME), sizeof(def.name) ); \
 		def.u.fs_d.valid_min		= (VALID_MIN); \
 		def.u.fs_d.slider_min		= (SLIDER_MIN); \
 		def.u.fs_d.valid_max		= (VALID_MAX); \
@@ -116,7 +122,7 @@
 do {\
 PF_Err	priv_err = PF_Err_NONE; \
 def.param_type = PF_Param_FLOAT_SLIDER; \
-PF_STRCPY(def.name, (NAME) ); \
+PF_STRNNCPY(def.name, (NAME), sizeof(def.name) ); \
 def.u.fs_d.valid_min		= (VALID_MIN); \
 def.u.fs_d.slider_min		= (SLIDER_MIN); \
 def.u.fs_d.valid_max		= (VALID_MAX); \
@@ -139,7 +145,7 @@ enum { PF_Precision_INTEGER, PF_Precision_TENTHS, PF_Precision_HUNDREDTHS, PF_Pr
 	do {\
 		PF_Err	priv_err = PF_Err_NONE; \
 		def.param_type = PF_Param_CHECKBOX; \
-		PF_STRCPY(def.name, NAME_A); \
+		PF_STRNNCPY(def.name, NAME_A, sizeof(def.name)); \
 		def.u.bd.u.nameptr  = (NAME_B); \
 		def.u.bd.value		= (DFLT); \
 		def.u.bd.dephault	= (PF_Boolean)(def.u.bd.value); \
@@ -160,7 +166,7 @@ enum { PF_Precision_INTEGER, PF_Precision_TENTHS, PF_Precision_HUNDREDTHS, PF_Pr
 		AEFX_CLR_STRUCT(def); \
 		PF_Err	priv_err = PF_Err_NONE; \
 		def.param_type		= PF_Param_BUTTON; \
-		PF_STRCPY(def.name, PARAM_NAME); \
+		PF_STRNNCPY(def.name, PARAM_NAME, sizeof(def.name)); \
 		def.u.button_d.u.namesptr  = (BUTTON_NAME); \
 		def.flags			= (PARAM_FLAGS); \
 		def.ui_flags		= (PUI_FLAGS); \
@@ -172,7 +178,7 @@ enum { PF_Precision_INTEGER, PF_Precision_TENTHS, PF_Precision_HUNDREDTHS, PF_Pr
 	do {\
 		PF_Err	priv_err = PF_Err_NONE; \
 		def.param_type = PF_Param_ANGLE; \
-		PF_STRCPY(def.name, (NAME) ); \
+		PF_STRNNCPY(def.name, (NAME), sizeof(def.name) ); \
 		def.u.ad.value = def.u.ad.dephault = (PF_Fixed)((DFLT) * 65536.0); \
 		def.uu.id = (ID); \
 		if ((priv_err = PF_ADD_PARAM(in_data, -1, &def)) != PF_Err_NONE) return priv_err; \
@@ -183,7 +189,7 @@ enum { PF_Precision_INTEGER, PF_Precision_TENTHS, PF_Precision_HUNDREDTHS, PF_Pr
 	do {\
 		PF_Err	priv_err = PF_Err_NONE; \
 		def.param_type = PF_Param_NO_DATA; \
-		PF_STRCPY(def.name, (NAME) ); \
+		PF_STRNNCPY(def.name, (NAME), sizeof(def.name) ); \
 		def.uu.id = (ID); \
 		if ((priv_err = PF_ADD_PARAM(in_data, -1, &def)) != PF_Err_NONE) return priv_err; \
 	} while (0)
@@ -193,7 +199,7 @@ enum { PF_Precision_INTEGER, PF_Precision_TENTHS, PF_Precision_HUNDREDTHS, PF_Pr
 	do {\
 		PF_Err	priv_err = PF_Err_NONE; \
 		def.param_type = PF_Param_POPUP; \
-		PF_STRCPY(def.name, (NAME) ); \
+		PF_STRNNCPY(def.name, (NAME), sizeof(def.name) ); \
 		def.u.pd.num_choices = (CHOICES); \
 		def.u.pd.dephault = (DFLT); \
 		def.u.pd.value = def.u.pd.dephault; \
@@ -206,7 +212,7 @@ enum { PF_Precision_INTEGER, PF_Precision_TENTHS, PF_Precision_HUNDREDTHS, PF_Pr
 	do	{\
 		PF_Err	priv_err = PF_Err_NONE; \
 		def.param_type = PF_Param_LAYER; \
-		PF_STRCPY(def.name, (NAME) ); \
+		PF_STRNNCPY(def.name, (NAME), sizeof(def.name) ); \
 		def.u.ld.dephault = (DFLT); \
 		def.uu.id = ID;\
 		if ((priv_err = PF_ADD_PARAM(in_data, -1, &def)) != PF_Err_NONE) return priv_err; \
@@ -222,7 +228,7 @@ enum { PF_Precision_INTEGER, PF_Precision_TENTHS, PF_Precision_HUNDREDTHS, PF_Pr
 	do	{\
 		PF_Err	priv_err = PF_Err_NONE; \
 		def.param_type = PF_Param_POINT; \
-		PF_STRCPY(def.name, (NAME) ); \
+		PF_STRNNCPY(def.name, (NAME), sizeof(def.name) ); \
 		def.u.td.restrict_bounds = RESTRICT_BOUNDS;\
 		def.u.td.x_value = def.u.td.x_dephault = (X_DFLT << 16); \
 		def.u.td.y_value = def.u.td.y_dephault = (Y_DFLT << 16); \
@@ -235,7 +241,7 @@ enum { PF_Precision_INTEGER, PF_Precision_TENTHS, PF_Precision_HUNDREDTHS, PF_Pr
 		AEFX_CLR_STRUCT(def); \
 		PF_Err	priv_err = PF_Err_NONE; \
 		def.param_type = PF_Param_POINT_3D; \
-		PF_STRCPY(def.name, (NAME) ); \
+		PF_STRNNCPY(def.name, (NAME), sizeof(def.name) ); \
 		def.u.point3d_d.x_value = def.u.point3d_d.x_dephault = X_DFLT; \
 		def.u.point3d_d.y_value = def.u.point3d_d.y_dephault = Y_DFLT; \
 		def.u.point3d_d.z_value = def.u.point3d_d.z_dephault = Y_DFLT; \
@@ -247,7 +253,7 @@ enum { PF_Precision_INTEGER, PF_Precision_TENTHS, PF_Precision_HUNDREDTHS, PF_Pr
 	do	{\
 		PF_Err	priv_err = PF_Err_NONE; \
 		def.param_type = PF_Param_GROUP_START; \
-		PF_STRCPY(def.name, (NAME) ); \
+		PF_STRNNCPY(def.name, (NAME), sizeof(def.name) ); \
 		def.uu.id = (ID); \
 		if ((priv_err = PF_ADD_PARAM(in_data, -1, &def)) != PF_Err_NONE) return priv_err; \
 	} while (0)

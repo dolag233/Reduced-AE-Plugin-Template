@@ -50,6 +50,74 @@
 */
 #define ARTEMIS_PLATFORM(X) (ARTEMIS_PRIVATE_PLATFORM_##X())
 
+/*
+    The ARTEMIS_ARCH() macro is used to conditionalize code based on processor architecture.
+
+    It is used as:
+
+    #if ARTEMIS_ARCH(ARM)
+    #endif
+
+    The currently supported platforms include ARM, X86, and WASM. The values are mutually
+    exclusive.
+
+    The value of this macro does not encapsulate whether compiling for a 32 or 64 bit system. See
+    ARTEMIS_BITS instead.
+*/
+#define ARTEMIS_ARCH(X) (ARTEMIS_PRIVATE_ARCH_##X())
+
+
+/*
+    The ARTEMIS_BITS() macro is used to conditionalize code based on processor bit width.
+
+    It is used as:
+
+    #if ARTEMIS_BITS(32)
+    #endif
+
+    The currently supported values are 32 and 64. The values are mutually exclusive.
+*/
+#define ARTEMIS_BITS(X) (ARTEMIS_PRIVATE_BITS_##X())
+
+/*
+    The ARTEMIS_CPU() macro is used as a short hand to conditionalize code based on processor
+    architecture and bit width.
+
+    It is used as:
+
+    #if ARTEMIS_CPU(X86, 64)
+    #endif
+
+    The above is equivalent to (ARTEMIS_ARCH(X86) && ARTEMIS_BITS(64))
+*/
+#define ARTEMIS_CPU(A,B) (ARTEMIS_PRIVATE_ARCH_##A() && ARTEMIS_PRIVATE_BITS_##B())
+
+/*
+    The ARTEMIS_PLATFORM_ARCH() macro is used as a short hand to conditionalize code based on
+    target platform and processor architecture.
+
+    It is used as:
+
+    #if ARTEMIS_PLATFORM_ARCH(APPLE, X86)
+    #endif
+
+    The above is equivalent to (ARTEMIS_PLATFORM(APPLE) && ARTEMIS_ARCH(X86))
+*/
+#define ARTEMIS_PLATFORM_ARCH(X, A) (ARTEMIS_PRIVATE_PLATFORM_##X() && ARTEMIS_PRIVATE_ARCH_##A())
+
+/*
+    The ARTEMIS_PLATFORM_ARCH_BITS() macro is used as a short hand to conditionalize code based on
+    target platform, processor architecture, and bit width.
+
+    It is used as:
+
+    #if ARTEMIS_PLATFORM_ARCH_BITS(APPLE, X86, 64)
+    #endif
+
+    The above is equivalent to (ARTEMIS_PLATFORM(APPLE) && ARTEMIS_ARCH(X86) && ARTEMIS_BITS(64))
+*/
+#define ARTEMIS_PLATFORM_ARCH_BITS(X, A, B) (ARTEMIS_PRIVATE_PLATFORM_##X() && ARTEMIS_PRIVATE_ARCH_##A() && ARTEMIS_PRIVATE_BITS_##B())
+
 /**************************************************************************************************/
 
 // The *_PRIVATE_* macros are just that. Don't use them directly.
@@ -65,11 +133,47 @@
 #define ARTEMIS_PRIVATE_PLATFORM_UWP() 0
 #define ARTEMIS_PRIVATE_PLATFORM_WIN32() 0
 
+#define ARTEMIS_PRIVATE_ARCH_ARM() 0
+#define ARTEMIS_PRIVATE_ARCH_X86() 0
+#define ARTEMIS_PRIVATE_ARCH_WASM() 0
+
+#define ARTEMIS_PRIVATE_BITS_32() 0
+#define ARTEMIS_PRIVATE_BITS_64() 0
+
 #if defined(__ANDROID__)
     #undef ARTEMIS_PRIVATE_PLATFORM_POSIX
     #define ARTEMIS_PRIVATE_PLATFORM_POSIX() 1
     #undef ARTEMIS_PRIVATE_PLATFORM_ANDROID
     #define ARTEMIS_PRIVATE_PLATFORM_ANDROID() 1
+
+    #if defined(__arm__)
+        #undef ARTEMIS_PRIVATE_ARCH_ARM
+        #define ARTEMIS_PRIVATE_ARCH_ARM() 1
+        #undef ARTEMIS_PRIVATE_BITS_32
+        #define ARTEMIS_PRIVATE_BITS_32() 1
+    #endif
+
+    #if defined(__aarch64__)
+        #undef ARTEMIS_PRIVATE_ARCH_ARM
+        #define ARTEMIS_PRIVATE_ARCH_ARM() 1
+        #undef ARTEMIS_PRIVATE_BITS_64
+        #define ARTEMIS_PRIVATE_BITS_64() 1
+    #endif
+
+    #if defined(__i386__)
+        #undef ARTEMIS_PRIVATE_ARCH_X86
+        #define ARTEMIS_PRIVATE_ARCH_X86() 1
+        #undef ARTEMIS_PRIVATE_BITS_32
+        #define ARTEMIS_PRIVATE_BITS_32() 1
+    #endif
+
+    #if defined(__x86_64__)
+        #undef ARTEMIS_PRIVATE_ARCH_X86
+        #define ARTEMIS_PRIVATE_ARCH_X86() 1
+        #undef ARTEMIS_PRIVATE_BITS_64
+        #define ARTEMIS_PRIVATE_BITS_64() 1
+    #endif
+
 #elif defined(_WIN32)
     #include <sdkddkver.h> // for #define WINVER
     #include <winapifamily.h>
@@ -84,8 +188,39 @@
         #undef ARTEMIS_PRIVATE_PLATFORM_WIN32
         #define ARTEMIS_PRIVATE_PLATFORM_WIN32() 1
     #endif
-#elif defined(__APPLE__) && !defined (__SIMULATED_WASM__)
-    #include "TargetConditionals.h"
+
+    #if defined(_M_ARM)
+        #undef ARTEMIS_PRIVATE_ARCH_ARM
+        #define ARTEMIS_PRIVATE_ARCH_ARM() 1
+        #undef ARTEMIS_PRIVATE_BITS_32
+        #define ARTEMIS_PRIVATE_BITS_32() 1
+    #endif
+
+    #if defined(_M_ARM64)
+        #undef ARTEMIS_PRIVATE_ARCH_ARM
+        #define ARTEMIS_PRIVATE_ARCH_ARM() 1
+        #undef ARTEMIS_PRIVATE_BITS_64
+        #define ARTEMIS_PRIVATE_BITS_64() 1
+    #endif
+
+
+    #if defined(_M_IX86)
+        #undef ARTEMIS_PRIVATE_ARCH_X86
+        #define ARTEMIS_PRIVATE_ARCH_X86() 1
+        #undef ARTEMIS_PRIVATE_BITS_32
+        #define ARTEMIS_PRIVATE_BITS_32() 1
+    #endif
+
+    #if defined(_M_X64)
+        #undef ARTEMIS_PRIVATE_ARCH_X86
+        #define ARTEMIS_PRIVATE_ARCH_X86() 1
+        #undef ARTEMIS_PRIVATE_BITS_64
+        #define ARTEMIS_PRIVATE_BITS_64() 1
+    #endif
+#elif defined(__APPLE__) && !defined(SIMULATED_WASM)
+    #if __has_include("TargetConditionals.h")
+        #include "TargetConditionals.h"
+    #endif
 
     #undef ARTEMIS_PRIVATE_PLATFORM_POSIX
     #define ARTEMIS_PRIVATE_PLATFORM_POSIX() 1
@@ -99,16 +234,66 @@
         #undef ARTEMIS_PRIVATE_PLATFORM_MACOS
         #define ARTEMIS_PRIVATE_PLATFORM_MACOS() 1
     #endif
-#elif defined(__LINUX__)
+
+    #if TARGET_CPU_ARM
+        #undef ARTEMIS_PRIVATE_ARCH_ARM
+        #define ARTEMIS_PRIVATE_ARCH_ARM() 1
+        #undef ARTEMIS_PRIVATE_BITS_32
+        #define ARTEMIS_PRIVATE_BITS_32() 1
+    #endif
+
+    #if TARGET_CPU_ARM64
+        #undef ARTEMIS_PRIVATE_ARCH_ARM
+        #define ARTEMIS_PRIVATE_ARCH_ARM() 1
+        #undef ARTEMIS_PRIVATE_BITS_64
+        #define ARTEMIS_PRIVATE_BITS_64() 1
+    #endif
+
+    #if TARGET_CPU_X86
+        #undef ARTEMIS_PRIVATE_ARCH_X86
+        #define ARTEMIS_PRIVATE_ARCH_X86() 1
+        #undef ARTEMIS_PRIVATE_BITS_32
+        #define ARTEMIS_PRIVATE_BITS_32() 1
+    #endif
+
+    #if TARGET_CPU_X86_64
+        #undef ARTEMIS_PRIVATE_ARCH_X86
+        #define ARTEMIS_PRIVATE_ARCH_X86() 1
+        #undef ARTEMIS_PRIVATE_BITS_64
+        #define ARTEMIS_PRIVATE_BITS_64() 1
+    #endif
+#elif defined(__LINUX__) || defined(__linux__)
     #undef ARTEMIS_PRIVATE_PLATFORM_POSIX
     #define ARTEMIS_PRIVATE_PLATFORM_POSIX() 1
     #undef ARTEMIS_PRIVATE_PLATFORM_LINUX
     #define ARTEMIS_PRIVATE_PLATFORM_LINUX() 1
-#elif defined(__EMSCRIPTEN__) || defined (__SIMULATED_WASM__)
+
+    #if defined(__x86_64__)
+        #undef ARTEMIS_PRIVATE_ARCH_X86
+        #define ARTEMIS_PRIVATE_ARCH_X86() 1
+        #undef ARTEMIS_PRIVATE_BITS_64
+        #define ARTEMIS_PRIVATE_BITS_64() 1
+    #endif
+
+#elif defined(__EMSCRIPTEN__) || defined(SIMULATED_WASM)
     #undef ARTEMIS_PRIVATE_PLATFORM_POSIX
     #define ARTEMIS_PRIVATE_PLATFORM_POSIX() 1
     #undef ARTEMIS_PRIVATE_PLATFORM_WEB
     #define ARTEMIS_PRIVATE_PLATFORM_WEB() 1
+
+    #undef ARTEMIS_PRIVATE_ARCH_WASM
+    #define ARTEMIS_PRIVATE_ARCH_WASM() 1
+    #undef ARTEMIS_PRIVATE_BITS_32
+    #define ARTEMIS_PRIVATE_BITS_32() 1
 #endif
+
+#if (ARTEMIS_PRIVATE_ARCH_ARM() + ARTEMIS_PRIVATE_ARCH_X86() + ARTEMIS_PRIVATE_ARCH_WASM()) != 1
+    #error "Unable to determine processor type"
+#endif
+
+#if (ARTEMIS_PRIVATE_BITS_32() + ARTEMIS_PRIVATE_BITS_64()) != 1
+    #error "Unable to determine whether compiling for 32 or 64 bit"
+#endif
+
 
 #endif // ARTEMIS_PLATFORM_HPP

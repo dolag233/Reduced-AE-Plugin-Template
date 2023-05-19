@@ -173,6 +173,9 @@ typedef A_long PF_Stage;
 **/
 
 //CC
+#define PF_AE234_PLUG_IN_VERSION			13	// manually set for SDK changes to allow more than 32 max threads for PF_Iterate
+#define PF_AE234_PLUG_IN_SUBVERS			28	// manually set for new 'Support URL' field in PiPL and new entry point
+
 #define PF_AE220_PLUG_IN_VERSION			13	// manually set for SDK changes to allow more than 32 max threads for PF_Iterate
 #define PF_AE220_PLUG_IN_SUBVERS			27	// manually set for SDK changes to allow more than 32 max threads for PF_Iterate
 
@@ -280,8 +283,8 @@ typedef A_long PF_Stage;
 #define PF_AE31_PLUG_IN_SUBVERS				6
 #define PF_AE31_PLUG_IN_SUBVERS_STRICTIFY	8
 
-#define PF_AE_PLUG_IN_VERSION				PF_AE220_PLUG_IN_VERSION	// manually set for SDK changes to allow more than 32 max threads for PF_Iterate
-#define PF_AE_PLUG_IN_SUBVERS				PF_AE220_PLUG_IN_SUBVERS	// manually set for SDK changes to allow more than 32 max threads for PF_Iterate
+#define PF_AE_PLUG_IN_VERSION				PF_AE234_PLUG_IN_VERSION	// manually set for SDK changes to allow more than 32 max threads for PF_Iterate
+#define PF_AE_PLUG_IN_SUBVERS				PF_AE234_PLUG_IN_SUBVERS	// manually set for SDK changes to allow more than 32 max threads for PF_Iterate
 
 /* Note:	AE3.1 will drive any v11.x plugin
 			AE4.0 will drive any v11.x or v12.x plugin
@@ -1121,6 +1124,11 @@ typedef A_long PF_InFlags;
 		appropriate bits when possible can result in great performance improvements, but 
 		incorrectly clearing bits will result in caching bugs, and you won't like that. Nope.
 
+	*** Important Reminder***
+		Before you add a new PF_Cmd, evaluate whether it should allow
+		new Sequence Data allocations! If so, remember to add it to
+		CmdCanChangeSequenceData() in FLT_Host.cpp!
+
 **/
 enum {		/* The order of this enumeration must not be altered! */
 	PF_Cmd_ABOUT = 0,			/* about can be called at any time */
@@ -1263,6 +1271,9 @@ typedef struct {
 
 
 #ifndef A_INTERNAL
+	// typedefs from AE_EffectCB.h
+	typedef A_long    PF_TransferMode;
+	typedef PF_TransferMode PF_XferMode;
 
 	// Basic pixel defn's
 	typedef struct {
@@ -1291,6 +1302,14 @@ typedef struct {
 	typedef struct {
 		PF_FpLong				mat[3][3];
 	} PF_FloatMatrix;
+
+	typedef struct {
+		PF_TransferMode     xfer;
+		A_long				rand_seed;  // for PF_Xfer_DISSOLVE_RANDOMIZED
+		A_u_char			opacity;	// 0 - 255	
+		PF_Boolean          rgb_only;   // ignored for PF_Xfer_MULTIPLY_ALPHA modes
+		A_u_short			opacitySu;	// for deep color only
+	} PF_CompositeMode;
 
 #endif
 
@@ -2339,7 +2358,8 @@ typedef PF_ParamDef** PF_ParamList;
  
  enum {
  	PF_RenderOutputFlag_RETURNS_EXTRA_PIXELS = 0x1, // if it's just as cheap to compute more pixels at once, set this to allow result > request rect
-	PF_RenderOutputFlag_GPU_RENDER_POSSIBLE = 0x2   // if the GPU render is possible given the params and frame render context
+	PF_RenderOutputFlag_GPU_RENDER_POSSIBLE = 0x2,   // if the GPU render is possible given the params and frame render context
+	PF_RenderOutputFlag_RESERVED1 = 0x4,
  };
  typedef short PF_RenderOutputFlags;
 

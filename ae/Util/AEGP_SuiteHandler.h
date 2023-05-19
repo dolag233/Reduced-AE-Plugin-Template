@@ -97,10 +97,12 @@ private:
 	// Suites we can register. These are mutable because they are demand loaded using a const object.
 
 	struct Suites {
+		AEGP_KeyframeSuite5			*keyframe_suite5P;
 		AEGP_KeyframeSuite4			*keyframe_suite4P;
 		AEGP_StreamSuite3			*stream_suite3P;
 		AEGP_StreamSuite4			*stream_suite4P;
 		AEGP_StreamSuite5			*stream_suite5P;
+		AEGP_StreamSuite6			*stream_suite6P;
 		AEGP_MarkerSuite1			*marker_suite1P;
 		AEGP_MarkerSuite2			*marker_suite2P;
 		AEGP_MarkerSuite3			*marker_suite3P;
@@ -203,6 +205,7 @@ private:
 		AEGP_LayerSuite6			*layer_suite_6P;
 		AEGP_LayerSuite7			*layer_suite_7P;
 		AEGP_LayerSuite8			*layer_suite_8P;
+		AEGP_LayerSuite9			*layer_suite_9P;
 
 #ifdef	I_NEED_ADM_SUPPORT
 		ADMBasicSuite8				*adm_basic_suite_8P;
@@ -229,6 +232,7 @@ private:
 		AEGP_FootageSuite5			*footage_suite_5P;
 		AEGP_RQItemSuite3			*rq_item_suite_3P;
 		AEGP_UtilitySuite4			*utility_suite_4P;
+		AEGP_ColorSettingsSuite4	*color_settings_suite_4P;
 		AEGP_ColorSettingsSuite3	*color_settings_suite_3P;
 		AEGP_ColorSettingsSuite2	*color_settings_suite_2P;
 		AEGP_ColorSettingsSuite1	*color_settings_suite_1P;
@@ -283,6 +287,7 @@ private:
 		AEGP_SUITE_RELEASE_BOILERPLATE(marker_suite3P, kAEGPMarkerSuite, kAEGPMarkerSuiteVersion3);
 		AEGP_SUITE_RELEASE_BOILERPLATE(layer_suite3P, kAEGPLayerSuite, kAEGPLayerSuiteVersion3);
 		AEGP_SUITE_RELEASE_BOILERPLATE(layer_suite4P, kAEGPLayerSuite, kAEGPLayerSuiteVersion4);
+		AEGP_SUITE_RELEASE_BOILERPLATE(stream_suite6P, kAEGPStreamSuite, kAEGPStreamSuiteVersion6);
 		AEGP_SUITE_RELEASE_BOILERPLATE(stream_suite5P, kAEGPStreamSuite, kAEGPStreamSuiteVersion5);
 		AEGP_SUITE_RELEASE_BOILERPLATE(stream_suite4P, kAEGPStreamSuite, kAEGPStreamSuiteVersion4);
 		AEGP_SUITE_RELEASE_BOILERPLATE(stream_suite3P, kAEGPStreamSuite, kAEGPStreamSuiteVersion3);
@@ -291,6 +296,7 @@ private:
 		AEGP_SUITE_RELEASE_BOILERPLATE(dynamic_stream_suite2P, kAEGPDynamicStreamSuite, kAEGPDynamicStreamSuiteVersion2);
 		AEGP_SUITE_RELEASE_BOILERPLATE(dynamic_stream_suite3P, kAEGPDynamicStreamSuite, kAEGPDynamicStreamSuiteVersion3);
 		AEGP_SUITE_RELEASE_BOILERPLATE(dynamic_stream_suite4P, kAEGPDynamicStreamSuite, kAEGPDynamicStreamSuiteVersion4);
+		AEGP_SUITE_RELEASE_BOILERPLATE(keyframe_suite5P, kAEGPKeyframeSuite, kAEGPKeyframeSuiteVersion5);
 		AEGP_SUITE_RELEASE_BOILERPLATE(keyframe_suite4P, kAEGPKeyframeSuite, kAEGPKeyframeSuiteVersion4);
 		AEGP_SUITE_RELEASE_BOILERPLATE(keyframe_suite3P, kAEGPKeyframeSuite, kAEGPKeyframeSuiteVersion3);
 		AEGP_SUITE_RELEASE_BOILERPLATE(keyframe_suite_1P, kAEGPKeyframeSuite, kAEGPKeyframeSuiteVersion1);
@@ -409,6 +415,7 @@ private:
 		AEGP_SUITE_RELEASE_BOILERPLATE(utility_suite_4P, kAEGPUtilitySuite, kAEGPUtilitySuiteVersion4);
 		AEGP_SUITE_RELEASE_BOILERPLATE(persistent_data_suite4P, kAEGPPersistentDataSuite, kAEGPPersistentDataSuiteVersion4);
 		AEGP_SUITE_RELEASE_BOILERPLATE(persistent_data_suite3P, kAEGPPersistentDataSuite, kAEGPPersistentDataSuiteVersion3);
+		AEGP_SUITE_RELEASE_BOILERPLATE(color_settings_suite_4P, kAEGPColorSettingsSuite, kAEGPColorSettingsSuiteVersion4);
 		AEGP_SUITE_RELEASE_BOILERPLATE(color_settings_suite_3P, kAEGPColorSettingsSuite, kAEGPColorSettingsSuiteVersion3);
 		AEGP_SUITE_RELEASE_BOILERPLATE(color_settings_suite_2P, kAEGPColorSettingsSuite, kAEGPColorSettingsSuiteVersion2);
 		AEGP_SUITE_RELEASE_BOILERPLATE(color_settings_suite_1P, kAEGPColorSettingsSuite, kAEGPColorSettingsSuiteVersion1);
@@ -452,6 +459,7 @@ public:
 	AEGP_SUITE_ACCESS_BOILERPLATE(MarkerSuite, 3, AEGP_, marker_suite3P, kAEGPMarkerSuite, kAEGPMarkerSuiteVersion3);
 	AEGP_SUITE_ACCESS_BOILERPLATE(LayerSuite, 3, AEGP_, layer_suite3P, kAEGPLayerSuite, kAEGPLayerSuiteVersion3);
 	AEGP_SUITE_ACCESS_BOILERPLATE(LayerSuite, 4, AEGP_, layer_suite4P, kAEGPLayerSuite, kAEGPLayerSuiteVersion4);
+	AEGP_SUITE_ACCESS_BOILERPLATE(StreamSuite, 6, AEGP_, stream_suite6P, kAEGPStreamSuite, kAEGPStreamSuiteVersion6);
 	AEGP_SUITE_ACCESS_BOILERPLATE(StreamSuite, 5, AEGP_, stream_suite5P, kAEGPStreamSuite, kAEGPStreamSuiteVersion5);
 	AEGP_SUITE_ACCESS_BOILERPLATE(StreamSuite, 4, AEGP_, stream_suite4P, kAEGPStreamSuite, kAEGPStreamSuiteVersion4);
 	AEGP_SUITE_ACCESS_BOILERPLATE(StreamSuite, 3, AEGP_, stream_suite3P, kAEGPStreamSuite, kAEGPStreamSuiteVersion3);
@@ -460,6 +468,7 @@ public:
 	AEGP_SUITE_ACCESS_BOILERPLATE(DynamicStreamSuite, 2, AEGP_, dynamic_stream_suite2P, kAEGPDynamicStreamSuite, kAEGPDynamicStreamSuiteVersion2);
 	AEGP_SUITE_ACCESS_BOILERPLATE(DynamicStreamSuite, 3, AEGP_, dynamic_stream_suite3P, kAEGPDynamicStreamSuite, kAEGPDynamicStreamSuiteVersion3);
 	AEGP_SUITE_ACCESS_BOILERPLATE(DynamicStreamSuite, 4, AEGP_, dynamic_stream_suite4P, kAEGPDynamicStreamSuite, kAEGPDynamicStreamSuiteVersion4);
+	AEGP_SUITE_ACCESS_BOILERPLATE(KeyframeSuite, 5, AEGP_, keyframe_suite5P, kAEGPKeyframeSuite, kAEGPKeyframeSuiteVersion5);
 	AEGP_SUITE_ACCESS_BOILERPLATE(KeyframeSuite, 4, AEGP_, keyframe_suite4P, kAEGPKeyframeSuite, kAEGPKeyframeSuiteVersion4);
 	AEGP_SUITE_ACCESS_BOILERPLATE(KeyframeSuite, 3, AEGP_, keyframe_suite3P, kAEGPKeyframeSuite, kAEGPKeyframeSuiteVersion3);
 	AEGP_SUITE_ACCESS_BOILERPLATE(KeyframeSuite, 1, AEGP_, keyframe_suite_1P, kAEGPKeyframeSuite, kAEGPKeyframeSuiteVersion1);
@@ -550,6 +559,7 @@ public:
 	AEGP_SUITE_ACCESS_BOILERPLATE(LayerSuite, 6, AEGP_, layer_suite_6P, kAEGPLayerSuite, kAEGPLayerSuiteVersion6);
 	AEGP_SUITE_ACCESS_BOILERPLATE(LayerSuite, 7, AEGP_, layer_suite_7P, kAEGPLayerSuite, kAEGPLayerSuiteVersion7);
 	AEGP_SUITE_ACCESS_BOILERPLATE(LayerSuite, 8, AEGP_, layer_suite_8P, kAEGPLayerSuite, kAEGPLayerSuiteVersion8);
+	AEGP_SUITE_ACCESS_BOILERPLATE(LayerSuite, 9, AEGP_, layer_suite_9P, kAEGPLayerSuite, kAEGPLayerSuiteVersion9);
 #ifdef	I_NEED_ADM_SUPPORT
 	AEGP_SUITE_ACCESS_BOILERPLATE(BasicSuite, 8, ADM, adm_basic_suite_8P, kADMBasicSuite, kADMBasicSuiteVersion8);
 	AEGP_SUITE_ACCESS_BOILERPLATE(DialogSuite, 8, ADM, adm_dialog_suite_8P, kADMDialogSuite, kADMDialogSuiteVersion8);
@@ -578,6 +588,7 @@ public:
 	AEGP_SUITE_ACCESS_BOILERPLATE(FootageSuite, 5, AEGP_, footage_suite_5P, kAEGPFootageSuite, kAEGPFootageSuiteVersion5);
 	AEGP_SUITE_ACCESS_BOILERPLATE(RQItemSuite, 3, AEGP_, rq_item_suite_3P, kAEGPRQItemSuite, kAEGPRQItemSuiteVersion3);
 	AEGP_SUITE_ACCESS_BOILERPLATE(UtilitySuite, 4, AEGP_, utility_suite_4P, kAEGPUtilitySuite, kAEGPUtilitySuiteVersion4);
+	AEGP_SUITE_ACCESS_BOILERPLATE(ColorSettingsSuite, 4, AEGP_, color_settings_suite_4P, kAEGPColorSettingsSuite, kAEGPColorSettingsSuiteVersion4);
 	AEGP_SUITE_ACCESS_BOILERPLATE(ColorSettingsSuite, 3, AEGP_, color_settings_suite_3P, kAEGPColorSettingsSuite, kAEGPColorSettingsSuiteVersion3);
 	AEGP_SUITE_ACCESS_BOILERPLATE(ColorSettingsSuite, 2, AEGP_, color_settings_suite_2P, kAEGPColorSettingsSuite, kAEGPColorSettingsSuiteVersion2);
 	AEGP_SUITE_ACCESS_BOILERPLATE(ColorSettingsSuite, 1, AEGP_, color_settings_suite_1P, kAEGPColorSettingsSuite, kAEGPColorSettingsSuiteVersion1);

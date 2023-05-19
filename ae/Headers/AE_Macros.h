@@ -36,6 +36,8 @@
 
 #include "A.h"
 
+#include <string.h>
+
 #ifndef ERR
 	#define ERR(FUNC)	do { if (!err) { err = (FUNC); } } while (0)
 #endif
@@ -45,14 +47,7 @@
 #endif
 
 #ifndef AEFX_CLR_STRUCT
-#define			AEFX_CLR_STRUCT(STRUCT)		\
-	do {									\
-		A_long _t = sizeof(STRUCT);			\
-		A_char *_p = (A_char*)&(STRUCT);		\
-		while (_t--) {						\
-			*_p++ = 0;						\
-		}									\
-	} while (0);										
+	#define AEFX_CLR_STRUCT(STRUCT) memset(&(STRUCT), 0, sizeof(STRUCT));
 #endif
 
 #ifndef DH

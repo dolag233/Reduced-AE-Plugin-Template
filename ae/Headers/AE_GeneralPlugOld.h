@@ -3183,6 +3183,458 @@ typedef struct AEGP_CompSuite1 {
 
 #define kAEGPLayerSuite				"AEGP Layer Suite"
 
+#define kAEGPLayerSuiteVersion8		14	/* frozen AE 12.0 x300 */
+
+typedef struct AEGP_LayerSuite8 {
+
+	SPAPI A_Err	(*AEGP_GetCompNumLayers)(
+						AEGP_CompH			compH,					/* >> */
+						A_long				*num_layersPL);			/* << */
+
+	SPAPI A_Err	(*AEGP_GetCompLayerByIndex)(
+						AEGP_CompH			compH,					/* >> */
+						A_long				layer_indexL,			/* >> */
+						AEGP_LayerH			*layerPH);				/* << */
+
+	SPAPI A_Err	(*AEGP_GetActiveLayer)(
+						AEGP_LayerH			*layerPH);				/* << returns non null only if one layer is selected */
+
+	SPAPI A_Err	(*AEGP_GetLayerIndex)(
+						AEGP_LayerH			layerH,					/* >> */
+						A_long				*layer_indexPL);		/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerSourceItem)(
+						AEGP_LayerH			layerH,					/* >> */
+						AEGP_ItemH			*source_itemPH);		/* << */
+
+	SPAPI A_Err (*AEGP_GetLayerSourceItemID)(
+						AEGP_LayerH			layerH,					/* >> */
+						A_long				*source_item_idPL);		/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerParentComp)(
+						AEGP_LayerH			layerH,					/* >> */
+						AEGP_CompH			*compPH);				/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerName)(
+						AEGP_PluginID			pluginID,				// in
+						AEGP_LayerH 		layerH,					/* >> */
+						AEGP_MemHandle		*utf_layer_namePH0,		// <<	handle of A_UTF16Char (contains null terminated UTF16 string); must be disposed with AEGP_FreeMemHandle
+						AEGP_MemHandle		*utf_source_namePH0);	// <<	handle of A_UTF16Char (contains null terminated UTF16 string); must be disposed with AEGP_FreeMemHandle
+
+	SPAPI A_Err	(*AEGP_GetLayerQuality)(
+						AEGP_LayerH			layerH,					/* >> */
+						AEGP_LayerQuality	*qualityP);				/* << */
+
+	SPAPI A_Err	(*AEGP_SetLayerQuality)(							/* UNDOABLE */
+						AEGP_LayerH			layerH,					/* >> */
+						AEGP_LayerQuality	quality);				/* >> */
+
+	SPAPI A_Err	(*AEGP_GetLayerFlags)(
+						AEGP_LayerH			layerH,					/* >> */
+						AEGP_LayerFlags		*layer_flagsP);			/* << */
+
+	SPAPI A_Err (*AEGP_SetLayerFlag)(
+						AEGP_LayerH			layerH,					/* >> */
+						AEGP_LayerFlags		single_flag,			/* >> */
+						A_Boolean			valueB);				/* >> */
+
+	SPAPI A_Err	(*AEGP_IsLayerVideoReallyOn)(						// accounts for solo status of other layers in comp
+						AEGP_LayerH			layerH,					/* >> */
+						A_Boolean			*onPB);					/* << */
+
+	SPAPI A_Err	(*AEGP_IsLayerAudioReallyOn)(						// accounts for solo status of other layers in comp
+						AEGP_LayerH			layerH,					/* >> */
+						A_Boolean			*onPB);					/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerCurrentTime)(						// not updated while rendering
+						AEGP_LayerH 		layerH,					/* >> */
+						AEGP_LTimeMode		time_mode,				/* >> */
+						A_Time 				*curr_timePT);			/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerInPoint)(
+						AEGP_LayerH 		layerH,					/* >> */
+						AEGP_LTimeMode		time_mode,				/* >> */
+						A_Time 				*in_pointPT);			/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerDuration)(
+						AEGP_LayerH 		layerH,					/* >> */
+						AEGP_LTimeMode		time_mode,				/* >> */
+						A_Time 				*durationPT);			/* << */
+
+	SPAPI A_Err	(*AEGP_SetLayerInPointAndDuration)(					/* UNDOABLE */
+						AEGP_LayerH 		layerH,					/* >> */
+						AEGP_LTimeMode		time_mode,				/* >> */
+						const A_Time 		*in_pointPT,			/* >> */
+						const A_Time 		*durationPT);			/* >> */
+
+	SPAPI A_Err	(*AEGP_GetLayerOffset)(
+						AEGP_LayerH 		layerH,					/* >> */
+						A_Time 				*offsetPT);				/* << always in comp time */
+
+	SPAPI A_Err	(*AEGP_SetLayerOffset)(								/* UNDOABLE */
+						AEGP_LayerH 		layerH,					/* >> */
+						const A_Time 		*offsetPT);				/* >> always in comp time */
+
+	SPAPI A_Err	(*AEGP_GetLayerStretch)(
+						AEGP_LayerH 		layerH,					/* >> */
+						A_Ratio 			*stretchPRt);			/* << */
+
+	SPAPI A_Err	(*AEGP_SetLayerStretch)(							/* UNDOABLE */
+						AEGP_LayerH 		layerH,					/* >> */
+						const A_Ratio 		*stretchPRt);			/* >> */
+
+	SPAPI A_Err	(*AEGP_GetLayerTransferMode)(
+						AEGP_LayerH 			layerH,				/* >> */
+						AEGP_LayerTransferMode	*transfer_modeP);	/* << */
+
+	SPAPI A_Err	(*AEGP_SetLayerTransferMode)(								/* UNDOABLE */
+						AEGP_LayerH 					layerH,				/* >> */
+						const AEGP_LayerTransferMode	*transfer_modeP);	/* >> */
+
+	SPAPI A_Err	(*AEGP_IsAddLayerValid)(
+						AEGP_ItemH 			item_to_addH,			/* >> */
+						AEGP_CompH 			into_compH,				/* >> */
+						A_Boolean			*validPB);				/* << */
+
+	SPAPI A_Err	(*AEGP_AddLayer)(									/* UNDOABLE */
+						AEGP_ItemH 			item_to_addH,			/* >> check AEGP_IsAddLayerValid() before using */
+						AEGP_CompH 			into_compH,				/* >> */
+						AEGP_LayerH			*added_layerPH0);		/* << */
+
+	SPAPI A_Err	(*AEGP_ReorderLayer)(								/* UNDOABLE */
+						AEGP_LayerH 		layerH,					/* >> */
+						A_long 				layer_indexL);			/* >> */
+
+	SPAPI A_Err	(*AEGP_GetLayerMaskedBounds)(
+						AEGP_LayerH 		layerH,			/* >> */
+						AEGP_LTimeMode		time_mode,		/* >> */
+						const A_Time	 	*timePT,		/* >> */
+						A_FloatRect			*boundsPR);		/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerObjectType)(
+						AEGP_LayerH 		layerH,				/* >> */
+						AEGP_ObjectType 	*object_type);		/* << */
+
+	SPAPI A_Err	(*AEGP_IsLayer3D)(
+						AEGP_LayerH 		layerH,				/* >> */
+						A_Boolean 			*is_3DPB);			/* << */
+
+	SPAPI A_Err	(*AEGP_IsLayer2D)(
+						AEGP_LayerH 		layerH,				/* >> */
+						A_Boolean 			*is_2DPB);			/* << */
+
+	SPAPI A_Err	(*AEGP_IsVideoActive)(
+						AEGP_LayerH 		layerH,				/* >> */
+						AEGP_LTimeMode		time_mode,			/* >> */
+						const A_Time	 	*timePT,			/* >> */
+						A_Boolean			*is_activePB);		/* << */
+
+	SPAPI A_Err	(*AEGP_IsLayerUsedAsTrackMatte)(
+						AEGP_LayerH			layerH,					/* >> */
+						A_Boolean			fill_must_be_activeB,	/* >> */
+						A_Boolean			*is_track_mattePB);		/* << */
+
+	SPAPI A_Err	(*AEGP_DoesLayerHaveTrackMatte)(
+						AEGP_LayerH			layerH,					/* >> */
+						A_Boolean			*has_track_mattePB);	/* << */
+
+	SPAPI A_Err	(*AEGP_ConvertCompToLayerTime)(
+					AEGP_LayerH		layerH,							/* >> */
+					const A_Time	*comp_timePT,					/* >> */
+					A_Time			*layer_timePT);					/* << */
+
+	SPAPI A_Err	(*AEGP_ConvertLayerToCompTime)(
+					AEGP_LayerH		layerH,							/* >> */
+					const A_Time	*layer_timePT,					/* >> */
+					A_Time			*comp_timePT) ;					/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerDancingRandValue)(
+					AEGP_LayerH		layerH,							/* >> */
+					const A_Time	*comp_timePT,					/* >> */
+					A_long			*rand_valuePL);					/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerID)(
+					AEGP_LayerH				layerH,				/* >> */
+					AEGP_LayerIDVal			*id_valP);			/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerToWorldXform)(
+				AEGP_LayerH				aegp_layerH,		/* >> */
+				const A_Time			*comp_timeP,		/* >> */
+				A_Matrix4				*transform);		/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerToWorldXformFromView)(
+				AEGP_LayerH				aegp_layerH,		/* >> */
+				const A_Time			*view_timeP,		/* >> */
+				const A_Time			*comp_timeP,		/* >> */
+				A_Matrix4				*transform);		/* << */
+
+	SPAPI A_Err (*AEGP_SetLayerName)(
+				AEGP_LayerH				aegp_layerH,		/* >> */
+				const A_UTF16Char		*new_nameZ);				/* >> null terminated UTF16 */
+
+	SPAPI A_Err	(*AEGP_GetLayerParent)(
+				const AEGP_LayerH		layerH,				/* >> */
+				AEGP_LayerH				*parent_layerPH);	/* << NULL if no parent */
+
+	SPAPI A_Err (*AEGP_SetLayerParent)(
+				AEGP_LayerH				layerH,				/* >> */
+				const AEGP_LayerH		parent_layerH0);	/* >> */
+
+	SPAPI A_Err (*AEGP_DeleteLayer)(
+				AEGP_LayerH				layerH);			/* >>  	UNDOABLE */
+
+	SPAPI A_Err (*AEGP_DuplicateLayer)(
+				AEGP_LayerH				orig_layerH,			/* >> */
+				AEGP_LayerH				*duplicate_layerPH);	/* << */
+
+	SPAPI A_Err (*AEGP_GetLayerFromLayerID)(
+				AEGP_CompH				parent_compH,			/* >> */
+				AEGP_LayerIDVal			id,						/* >> */
+				AEGP_LayerH				*layerPH);				/* << */
+
+	SPAPI A_Err (*AEGP_GetLayerLabel)(
+				AEGP_LayerH				layerH,					/* >> */
+				AEGP_LabelID			*labelP);				/* << */
+
+	SPAPI A_Err (*AEGP_SetLayerLabel)(		/* UNDOABLE */
+				AEGP_LayerH				layerH,					/* >> */
+				AEGP_LabelID			label);					/* >> */
+
+	SPAPI A_Err	(*AEGP_GetLayerSamplingQuality)(
+				AEGP_LayerH					layerH,					/* >> */
+				AEGP_LayerSamplingQuality	*qualityP);				/* << */
+
+	/* Option is explicitly set on the layer independent of layer quality. 
+	If you want to force it on you must also set the layer quality to 
+	AEGP_LayerQual_BEST with AEGP_SetLayerQuality. Otherwise it will only be using
+	the specified layer sampling quality whenever the layer quality is set to AEGP_LayerQual_BEST*/
+	SPAPI A_Err	(*AEGP_SetLayerSamplingQuality)(			/* UNDOABLE */
+				AEGP_LayerH					layerH,					/* >> */
+				AEGP_LayerSamplingQuality	quality);				/* >> */
+
+} AEGP_LayerSuite8;
+
+
+#define kAEGPLayerSuiteVersion7		13	/* frozen AE 10.0 build 396 */
+
+typedef struct AEGP_LayerSuite7 {
+
+	SPAPI A_Err	(*AEGP_GetCompNumLayers)(
+						AEGP_CompH			compH,					/* >> */
+						A_long				*num_layersPL);			/* << */
+
+	SPAPI A_Err	(*AEGP_GetCompLayerByIndex)(
+						AEGP_CompH			compH,					/* >> */
+						A_long				layer_indexL,			/* >> */
+						AEGP_LayerH			*layerPH);				/* << */
+
+	SPAPI A_Err	(*AEGP_GetActiveLayer)(
+						AEGP_LayerH			*layerPH);				/* << returns non null only if one layer is selected */
+
+	SPAPI A_Err	(*AEGP_GetLayerIndex)(
+						AEGP_LayerH			layerH,					/* >> */
+						A_long				*layer_indexPL);		/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerSourceItem)(
+						AEGP_LayerH			layerH,					/* >> */
+						AEGP_ItemH			*source_itemPH);		/* << */
+
+	SPAPI A_Err (*AEGP_GetLayerSourceItemID)(
+						AEGP_LayerH			layerH,					/* >> */
+						A_long				*source_item_idPL);		/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerParentComp)(
+						AEGP_LayerH			layerH,					/* >> */
+						AEGP_CompH			*compPH);				/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerName)(
+						AEGP_PluginID			pluginID,				// in
+						AEGP_LayerH 		layerH,					/* >> */
+						AEGP_MemHandle		*utf_layer_namePH0,		// <<	handle of A_UTF16Char (contains null terminated UTF16 string); must be disposed with AEGP_FreeMemHandle
+						AEGP_MemHandle		*utf_source_namePH0);	// <<	handle of A_UTF16Char (contains null terminated UTF16 string); must be disposed with AEGP_FreeMemHandle
+
+	SPAPI A_Err	(*AEGP_GetLayerQuality)(
+						AEGP_LayerH			layerH,					/* >> */
+						AEGP_LayerQuality	*qualityP);				/* << */
+
+	SPAPI A_Err	(*AEGP_SetLayerQuality)(							/* UNDOABLE */
+						AEGP_LayerH			layerH,					/* >> */
+						AEGP_LayerQuality	quality);				/* >> */
+
+	SPAPI A_Err	(*AEGP_GetLayerFlags)(
+						AEGP_LayerH			layerH,					/* >> */
+						AEGP_LayerFlags		*layer_flagsP);			/* << */
+
+	SPAPI A_Err (*AEGP_SetLayerFlag)(
+						AEGP_LayerH			layerH,					/* >> */
+						AEGP_LayerFlags		single_flag,			/* >> */
+						A_Boolean			valueB);				/* >> */
+
+	SPAPI A_Err	(*AEGP_IsLayerVideoReallyOn)(						// accounts for solo status of other layers in comp
+						AEGP_LayerH			layerH,					/* >> */
+						A_Boolean			*onPB);					/* << */
+
+	SPAPI A_Err	(*AEGP_IsLayerAudioReallyOn)(						// accounts for solo status of other layers in comp
+						AEGP_LayerH			layerH,					/* >> */
+						A_Boolean			*onPB);					/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerCurrentTime)(						// not updated while rendering
+						AEGP_LayerH 		layerH,					/* >> */
+						AEGP_LTimeMode		time_mode,				/* >> */
+						A_Time 				*curr_timePT);			/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerInPoint)(
+						AEGP_LayerH 		layerH,					/* >> */
+						AEGP_LTimeMode		time_mode,				/* >> */
+						A_Time 				*in_pointPT);			/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerDuration)(
+						AEGP_LayerH 		layerH,					/* >> */
+						AEGP_LTimeMode		time_mode,				/* >> */
+						A_Time 				*durationPT);			/* << */
+
+	SPAPI A_Err	(*AEGP_SetLayerInPointAndDuration)(					/* UNDOABLE */
+						AEGP_LayerH 		layerH,					/* >> */
+						AEGP_LTimeMode		time_mode,				/* >> */
+						const A_Time 		*in_pointPT,			/* >> */
+						const A_Time 		*durationPT);			/* >> */
+
+	SPAPI A_Err	(*AEGP_GetLayerOffset)(
+						AEGP_LayerH 		layerH,					/* >> */
+						A_Time 				*offsetPT);				/* << always in comp time */
+
+	SPAPI A_Err	(*AEGP_SetLayerOffset)(								/* UNDOABLE */
+						AEGP_LayerH 		layerH,					/* >> */
+						const A_Time 		*offsetPT);				/* >> always in comp time */
+
+	SPAPI A_Err	(*AEGP_GetLayerStretch)(
+						AEGP_LayerH 		layerH,					/* >> */
+						A_Ratio 			*stretchPRt);			/* << */
+
+	SPAPI A_Err	(*AEGP_SetLayerStretch)(							/* UNDOABLE */
+						AEGP_LayerH 		layerH,					/* >> */
+						const A_Ratio 		*stretchPRt);			/* >> */
+
+	SPAPI A_Err	(*AEGP_GetLayerTransferMode)(
+						AEGP_LayerH 			layerH,				/* >> */
+						AEGP_LayerTransferMode	*transfer_modeP);	/* << */
+
+	SPAPI A_Err	(*AEGP_SetLayerTransferMode)(								/* UNDOABLE */
+						AEGP_LayerH 					layerH,				/* >> */
+						const AEGP_LayerTransferMode	*transfer_modeP);	/* >> */
+
+	SPAPI A_Err	(*AEGP_IsAddLayerValid)(
+						AEGP_ItemH 			item_to_addH,			/* >> */
+						AEGP_CompH 			into_compH,				/* >> */
+						A_Boolean			*validPB);				/* << */
+
+	SPAPI A_Err	(*AEGP_AddLayer)(									/* UNDOABLE */
+						AEGP_ItemH 			item_to_addH,			/* >> check AEGP_IsAddLayerValid() before using */
+						AEGP_CompH 			into_compH,				/* >> */
+						AEGP_LayerH			*added_layerPH0);		/* << */
+
+	SPAPI A_Err	(*AEGP_ReorderLayer)(								/* UNDOABLE */
+						AEGP_LayerH 		layerH,					/* >> */
+						A_long 				layer_indexL);			/* >> */
+
+	SPAPI A_Err	(*AEGP_GetLayerMaskedBounds)(
+						AEGP_LayerH 		layerH,			/* >> */
+						AEGP_LTimeMode		time_mode,		/* >> */
+						const A_Time	 	*timePT,		/* >> */
+						A_FloatRect			*boundsPR);		/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerObjectType)(
+						AEGP_LayerH 		layerH,				/* >> */
+						AEGP_ObjectType 	*object_type);		/* << */
+
+	SPAPI A_Err	(*AEGP_IsLayer3D)(
+						AEGP_LayerH 		layerH,				/* >> */
+						A_Boolean 			*is_3DPB);			/* << */
+
+	SPAPI A_Err	(*AEGP_IsLayer2D)(
+						AEGP_LayerH 		layerH,				/* >> */
+						A_Boolean 			*is_2DPB);			/* << */
+
+	SPAPI A_Err	(*AEGP_IsVideoActive)(
+						AEGP_LayerH 		layerH,				/* >> */
+						AEGP_LTimeMode		time_mode,			/* >> */
+						const A_Time	 	*timePT,			/* >> */
+						A_Boolean			*is_activePB);		/* << */
+
+	SPAPI A_Err	(*AEGP_IsLayerUsedAsTrackMatte)(
+						AEGP_LayerH			layerH,					/* >> */
+						A_Boolean			fill_must_be_activeB,	/* >> */
+						A_Boolean			*is_track_mattePB);		/* << */
+
+	SPAPI A_Err	(*AEGP_DoesLayerHaveTrackMatte)(
+						AEGP_LayerH			layerH,					/* >> */
+						A_Boolean			*has_track_mattePB);	/* << */
+
+	SPAPI A_Err	(*AEGP_ConvertCompToLayerTime)(
+					AEGP_LayerH		layerH,							/* >> */
+					const A_Time	*comp_timePT,					/* >> */
+					A_Time			*layer_timePT);					/* << */
+
+	SPAPI A_Err	(*AEGP_ConvertLayerToCompTime)(
+					AEGP_LayerH		layerH,							/* >> */
+					const A_Time	*layer_timePT,					/* >> */
+					A_Time			*comp_timePT) ;					/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerDancingRandValue)(
+					AEGP_LayerH		layerH,							/* >> */
+					const A_Time	*comp_timePT,					/* >> */
+					A_long			*rand_valuePL);					/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerID)(
+					AEGP_LayerH				layerH,				/* >> */
+					AEGP_LayerIDVal			*id_valP);			/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerToWorldXform)(
+				AEGP_LayerH				aegp_layerH,		/* >> */
+				const A_Time			*comp_timeP,		/* >> */
+				A_Matrix4				*transform);		/* << */
+
+	SPAPI A_Err	(*AEGP_GetLayerToWorldXformFromView)(
+				AEGP_LayerH				aegp_layerH,		/* >> */
+				const A_Time			*view_timeP,		/* >> */
+				const A_Time			*comp_timeP,		/* >> */
+				A_Matrix4				*transform);		/* << */
+
+	SPAPI A_Err (*AEGP_SetLayerName)(
+				AEGP_LayerH				aegp_layerH,		/* >> */
+				const A_UTF16Char		*new_nameZ);				/* >> null terminated UTF16 */
+
+	SPAPI A_Err	(*AEGP_GetLayerParent)(
+				const AEGP_LayerH		layerH,				/* >> */
+				AEGP_LayerH				*parent_layerPH);	/* << NULL if no parent */
+
+	SPAPI A_Err (*AEGP_SetLayerParent)(
+				AEGP_LayerH				layerH,				/* >> */
+				const AEGP_LayerH		parent_layerH0);	/* >> */
+
+	SPAPI A_Err (*AEGP_DeleteLayer)(
+				AEGP_LayerH				layerH);			/* >>  	UNDOABLE */
+
+	SPAPI A_Err (*AEGP_DuplicateLayer)(
+				AEGP_LayerH				orig_layerH,			/* >> */
+				AEGP_LayerH				*duplicate_layerPH);	/* << */
+
+	SPAPI A_Err (*AEGP_GetLayerFromLayerID)(
+				AEGP_CompH				parent_compH,			/* >> */
+				AEGP_LayerIDVal			id,						/* >> */
+				AEGP_LayerH				*layerPH);				/* << */
+
+	SPAPI A_Err (*AEGP_GetLayerLabel)(
+				AEGP_LayerH				layerH,					/* >> */
+				AEGP_LabelID			*labelP);				/* << */
+
+	SPAPI A_Err (*AEGP_SetLayerLabel)(		/* UNDOABLE */
+				AEGP_LayerH				layerH,					/* >> */
+				AEGP_LabelID			label);					/* >> */
+
+} AEGP_LayerSuite7;
+
+
 #define kAEGPLayerSuiteVersion6		12	/* frozen AE 9.0 */
 
 typedef struct AEGP_LayerSuite6 {
@@ -4053,6 +4505,130 @@ typedef struct {
 } AEGP_StreamValue;
 
 #define kAEGPStreamSuite				"AEGP Stream Suite"
+
+#define kAEGPStreamSuiteVersion5        10 /* frozen in AE 15 */
+typedef struct AEGP_StreamSuite5 {
+    //    the only diff from this vs. last rev is that routines that pass AEGP_StreamValue2, when referring to a marker,
+    //    (comp or layer) the struct now contains the NEW markerP type, which is compatible with the new Marker Suite
+
+    SPAPI A_Err (*AEGP_IsStreamLegal)(
+                        AEGP_LayerH            layerH,                    /* >> */
+                        AEGP_LayerStream    which_stream,            /* >> */
+                        A_Boolean*            is_legalP);                /* << */
+
+
+    SPAPI A_Err (*AEGP_CanVaryOverTime)(
+                        AEGP_StreamRefH streamH,                    /* >> */
+                        A_Boolean* can_varyPB);                        /* << */
+
+    SPAPI A_Err (*AEGP_GetValidInterpolations)(
+                        AEGP_StreamRefH                streamH,                    /* >> */
+                        AEGP_KeyInterpolationMask*    valid_interpolationsP);        /* << */
+
+    SPAPI A_Err    (*AEGP_GetNewLayerStream)(
+                        AEGP_PluginID        aegp_plugin_id,            /* >> */
+                        AEGP_LayerH            layerH,                    /* >> */
+                        AEGP_LayerStream    which_stream,            /* >> */
+                        AEGP_StreamRefH     *streamPH);                /* << must be disposed by caller! */
+
+    SPAPI A_Err    (*AEGP_GetEffectNumParamStreams)(
+                        AEGP_EffectRefH        effect_refH,            /* >> */
+                        A_long                *num_paramsPL);            /* << */
+
+    SPAPI A_Err    (*AEGP_GetNewEffectStreamByIndex)(
+                        AEGP_PluginID        aegp_plugin_id,            /* >> */
+                        AEGP_EffectRefH        effect_refH,            /* >> */
+                        PF_ParamIndex        param_index,            /* >> valid in range [0 to AEGP_GetEffectNumParamStreams - 1], where 0 is the effect's input layer */
+                        AEGP_StreamRefH     *streamPH);                /* << must be disposed by caller! */
+
+    SPAPI A_Err    (*AEGP_GetNewMaskStream)(
+                        AEGP_PluginID        aegp_plugin_id,            /* >> */
+                        AEGP_MaskRefH        mask_refH,                /* >> */
+                        AEGP_MaskStream        which_stream,            /* >> */
+                        AEGP_StreamRefH     *mask_streamPH);        /* << must be disposed by caller! */
+
+    SPAPI A_Err    (*AEGP_DisposeStream)(
+                        AEGP_StreamRefH     streamH);                /* >> */
+
+    SPAPI A_Err    (*AEGP_GetStreamName)(
+                        AEGP_PluginID            pluginID,                // in
+                        AEGP_StreamRefH     streamH,                /* >> */
+                        A_Boolean            force_englishB,            /* >> */
+                        AEGP_MemHandle        *utf_stream_namePH);        // <<    handle of A_UTF16Char (contains null terminated UTF16 string); must be disposed with AEGP_FreeMemHandle
+
+    SPAPI A_Err    (*AEGP_GetStreamUnitsText)(
+                        AEGP_StreamRefH     streamH,                /* >> */
+                        A_Boolean            force_englishB,            /* >> */
+                        A_char                *unitsZ);                /* << space for A_char[AEGP_MAX_STREAM_UNITS_SIZE] */
+
+    SPAPI A_Err    (*AEGP_GetStreamProperties)(
+                        AEGP_StreamRefH     streamH,                /* >> */
+                        AEGP_StreamFlags     *flagsP,                /* << */
+                        A_FpLong             *minP0,                    /* << */
+                        A_FpLong             *maxP0);                /* << */
+
+    SPAPI A_Err    (*AEGP_IsStreamTimevarying)(                        /* takes expressions into account */
+                        AEGP_StreamRefH     streamH,                /* >> */
+                        A_Boolean            *is_timevaryingPB);        /* << */
+
+    SPAPI A_Err    (*AEGP_GetStreamType)(
+                        AEGP_StreamRefH     streamH,                /* >> */
+                        AEGP_StreamType        *stream_typeP);            /* << */
+
+    SPAPI A_Err    (*AEGP_GetNewStreamValue)(
+                        AEGP_PluginID        aegp_plugin_id,            /* >> */
+                        AEGP_StreamRefH     streamH,                /* >> */
+                        AEGP_LTimeMode        time_mode,                /* >> */
+                        const A_Time        *timePT,                /* >> */
+                        A_Boolean            pre_expressionB,        /* >> sample the stream before evaluating the expression */
+                        AEGP_StreamValue2    *valueP);                /* << must be disposed */
+
+    SPAPI A_Err    (*AEGP_DisposeStreamValue)(
+                        AEGP_StreamValue2    *valueP);                /* <> */
+
+
+    SPAPI A_Err    (*AEGP_SetStreamValue)(                                // only legal to call when AEGP_GetStreamNumKFs==0 or NO_DATA
+                        AEGP_PluginID        aegp_plugin_id,            /* >> */
+                        AEGP_StreamRefH     streamH,                /* >> */
+                        AEGP_StreamValue2    *valueP);                /* << */
+
+    // this is only valid on streams with primitive types. It is illegal on
+    // AEGP_ArbBlockVal || AEGP_MarkerValP || AEGP_MaskOutlineValH
+
+    SPAPI A_Err    (*AEGP_GetLayerStreamValue)(
+                        AEGP_LayerH            layerH,                    /* >> */
+                        AEGP_LayerStream    which_stream,            /* >> */
+                        AEGP_LTimeMode        time_mode,                /* >> */
+                        const A_Time        *timePT,                /* >> */
+                        A_Boolean            pre_expressionB,        /* >> sample the stream before evaluating the expression */
+                        AEGP_StreamVal2        *stream_valP,            /* << */
+                        AEGP_StreamType     *stream_typeP0);        /* << */
+
+    SPAPI A_Err    (*AEGP_GetExpressionState)(                            /* expressions can be disabled automatically by the parser on playback */
+                        AEGP_PluginID        aegp_plugin_id,            /* >> */
+                        AEGP_StreamRefH     streamH,                /* >> */
+                        A_Boolean            *enabledPB);            /* >> */
+
+    SPAPI A_Err    (*AEGP_SetExpressionState)(                            /* expressions can be disabled automatically by the parser on playback */
+                        AEGP_PluginID        aegp_plugin_id,            /* >> */
+                        AEGP_StreamRefH     streamH,                /* >> */
+                        A_Boolean            enabledB);                /* >> */
+
+    SPAPI A_Err(*AEGP_GetExpression)(
+                        AEGP_PluginID        aegp_plugin_id,            /* >> */
+                        AEGP_StreamRefH     streamH,                /* >> */
+                        AEGP_MemHandle        *unicodeHZ);            /* << must be disposed with AEGP_FreeMemHandle */
+
+    SPAPI A_Err(*AEGP_SetExpression)(
+                        AEGP_PluginID        aegp_plugin_id,            /* >> */
+                        AEGP_StreamRefH     streamH,                /* >> */
+                        const A_UTF16Char*    expressionP);            /* >> not adopted */
+
+    SPAPI A_Err (*AEGP_DuplicateStreamRef)(                    // must dispose yourself
+                        AEGP_PluginID        aegp_plugin_id,            // in
+                        AEGP_StreamRefH        streamH,                // in
+                        AEGP_StreamRefH        *dup_streamPH);            // out
+} AEGP_StreamSuite5;
 
 #define kAEGPStreamSuiteVersion4		9 /* frozen in AE 9 */
 typedef struct AEGP_StreamSuite4 {
@@ -6224,6 +6800,127 @@ typedef struct AEGP_ItemSuite3 {
 
 /**************************************************************************************************/
 #define kAEGPKeyframeSuite				"AEGP Keyframe Suite"
+#define kAEGPKeyframeSuiteVersion4		4 	/* frozen in 8 */
+
+typedef struct AEGP_KeyframeSuite4 {
+	//	the only diff from this vs. last rev is that routines that pass AEGP_StreamValue2, when referring to a marker,
+	//	(comp or layer) the struct now contains the NEW markerP type, which is compatible with the new Marker Suite
+
+	// returns AEGP_NumKF_NO_DATA if it's a AEGP_StreamType_NO_DATA, and you can't retrieve any values
+	// returns zero if no keyframes (but might have an expression, so not necessarily constant)
+	SPAPI A_Err(*AEGP_GetStreamNumKFs)(
+		AEGP_StreamRefH 		streamH,				/* >> */
+		A_long* num_kfsPL);			/* << */
+
+
+	SPAPI A_Err(*AEGP_GetKeyframeTime)(
+		AEGP_StreamRefH			streamH,				/* >> */
+		AEGP_KeyframeIndex		key_index,				/* >> */
+		AEGP_LTimeMode			time_mode,				/* >> */
+		A_Time* timePT);				/* << */
+
+// leaves stream unchanged if a keyframe already exists at specified time
+	SPAPI A_Err(*AEGP_InsertKeyframe)(									/* UNDOABLE */
+		AEGP_StreamRefH			streamH,				/* <> */
+		AEGP_LTimeMode			time_mode,				/* >> */
+		const A_Time* timePT,				/* >> */
+		AEGP_KeyframeIndex* key_indexP);			/* << */
+
+	SPAPI A_Err(*AEGP_DeleteKeyframe)(									/* UNDOABLE */
+		AEGP_StreamRefH			streamH,				/* <> */
+		AEGP_KeyframeIndex		key_index);				/* >> */
+
+	SPAPI A_Err(*AEGP_GetNewKeyframeValue)(							// dispose using AEGP_DisposeStreamValue()
+		AEGP_PluginID			aegp_plugin_id,			/* >> */
+		AEGP_StreamRefH			streamH,				/* >> */
+		AEGP_KeyframeIndex		key_index,				/* >> */
+		AEGP_StreamValue2* valueP);				/* << */
+
+	SPAPI A_Err(*AEGP_SetKeyframeValue)(								/* UNDOABLE */
+		AEGP_StreamRefH			streamH,				/* >> */
+		AEGP_KeyframeIndex		key_index,				/* >> */
+		const AEGP_StreamValue2* valueP);				/* >>  not adopted */
+
+	SPAPI A_Err(*AEGP_GetStreamValueDimensionality)(
+		AEGP_StreamRefH			streamH,				/* >> */
+		A_short* value_dimPS);			/* << */
+
+	SPAPI A_Err(*AEGP_GetStreamTemporalDimensionality)(
+		AEGP_StreamRefH			streamH,				/* >> */
+		A_short* temporal_dimPS);		/* << */
+
+	SPAPI A_Err(*AEGP_GetNewKeyframeSpatialTangents)(					// dispose using AEGP_DisposeStreamValue()
+		AEGP_PluginID			aegp_plugin_id,			/* >> */
+		AEGP_StreamRefH			streamH,				/* >> */
+		AEGP_KeyframeIndex		key_index,				/* >> */
+		AEGP_StreamValue2* in_tanP0,				/* << */
+		AEGP_StreamValue2* out_tanP0);			/* << */
+
+	SPAPI A_Err(*AEGP_SetKeyframeSpatialTangents)(						/* UNDOABLE */
+		AEGP_StreamRefH			streamH,				/* >> */
+		AEGP_KeyframeIndex		key_index,				/* >> */
+		const AEGP_StreamValue2* in_tanP0,				/* >>  not adopted */
+		const AEGP_StreamValue2* out_tanP0);			/* >>  not adopted */
+
+	SPAPI A_Err(*AEGP_GetKeyframeTemporalEase)(
+		AEGP_StreamRefH			streamH,				/* >> */
+		AEGP_KeyframeIndex		key_index,				/* >> */
+		A_long					dimensionL,				/* >> ranges from 0..TemporalDimensionality-1 */
+		AEGP_KeyframeEase* in_easeP0,				/* << */
+		AEGP_KeyframeEase* out_easeP0);			/* << */
+
+	SPAPI A_Err(*AEGP_SetKeyframeTemporalEase)(						/* UNDOABLE */
+		AEGP_StreamRefH			streamH,				/* >> */
+		AEGP_KeyframeIndex		key_index,				/* >> */
+		A_long					dimensionL,				/* >> ranges from 0..TemporalDimensionality-1 */
+		const AEGP_KeyframeEase* in_easeP0,				/* >> not adopted */
+		const AEGP_KeyframeEase* out_easeP0);			/* >> not adopted */
+
+	SPAPI A_Err(*AEGP_GetKeyframeFlags)(
+		AEGP_StreamRefH			streamH,				/* >> */
+		AEGP_KeyframeIndex		key_index,				/* >> */
+		AEGP_KeyframeFlags* flagsP);				/* << */
+
+	SPAPI A_Err(*AEGP_SetKeyframeFlag)(								/* UNDOABLE */
+		AEGP_StreamRefH			streamH,				/* >> */
+		AEGP_KeyframeIndex		key_index,				/* >> */
+		AEGP_KeyframeFlags		flag,					/* >> set one flag at a time */
+		A_Boolean				true_falseB);			/* >> */
+
+	SPAPI A_Err(*AEGP_GetKeyframeInterpolation)(
+		AEGP_StreamRefH					streamH,		/* >> */
+		AEGP_KeyframeIndex				key_index,		/* >> */
+		AEGP_KeyframeInterpolationType* in_interpP0,	/* << */
+		AEGP_KeyframeInterpolationType* out_interpP0);	/* << */
+
+	SPAPI A_Err(*AEGP_SetKeyframeInterpolation)(						/* UNDOABLE */
+		AEGP_StreamRefH					streamH,		/* >> */
+		AEGP_KeyframeIndex				key_index,		/* >> */
+		AEGP_KeyframeInterpolationType	in_interp,		/* >> */
+		AEGP_KeyframeInterpolationType	out_interp);	/* >> */
+
+	SPAPI A_Err(*AEGP_StartAddKeyframes)(
+		AEGP_StreamRefH			streamH,
+		AEGP_AddKeyframesInfoH* akPH);			/* << */
+
+
+	SPAPI A_Err(*AEGP_AddKeyframes)(
+		AEGP_AddKeyframesInfoH	akH,			/* <> */
+		AEGP_LTimeMode          time_mode,		/* >> */
+		const A_Time* timePT,		/* >> */
+		A_long* key_indexPL);	/* >> */
+
+	SPAPI A_Err(*AEGP_SetAddKeyframe)(
+		AEGP_AddKeyframesInfoH	akH,			/* <> */
+		A_long					key_indexL,		/* >> */
+		const AEGP_StreamValue2* valueP);		/* >> */
+
+	SPAPI A_Err(*AEGP_EndAddKeyframes)(						/* UNDOABLE */
+		A_Boolean				addB,
+		AEGP_AddKeyframesInfoH	akH);			/* >> */
+
+} AEGP_KeyframeSuite4;
+
 #define kAEGPKeyframeSuiteVersion3		3 	/* frozen in 6.5 */
 
 typedef struct AEGP_KeyframeSuite3 {
@@ -8436,6 +9133,123 @@ typedef struct AEGP_ColorSettingsSuite2 {
 
 
 } AEGP_ColorSettingsSuite2;
+
+#define kAEGPColorSettingsSuiteVersion3	4	// frozen in AE 16.1; adding an API to set working color space
+
+typedef struct AEGP_ColorSettingsSuite3 {
+
+	 SPAPI	A_Err (*AEGP_GetBlendingTables)(
+		PR_RenderContextH 		render_contextH,
+		PF_EffectBlendingTables *blending_tables);
+		
+	SPAPI	A_Err (*AEGP_DoesViewHaveColorSpaceXform)(
+		AEGP_ItemViewP	viewP,			// >>
+		A_Boolean		*has_xformPB);	// <<
+		
+	SPAPI	A_Err (*AEGP_XformWorkingToViewColorSpace)(
+		AEGP_ItemViewP	viewP,		// >>
+		AEGP_WorldH		srcH,		// in
+		AEGP_WorldH		dstH);		// out; must be the same size (can be the same as source)
+		
+	SPAPI	A_Err (*AEGP_GetNewWorkingSpaceColorProfile)(
+		AEGP_PluginID		aegp_plugin_id,					// >>
+		AEGP_CompH			compH,							// >>
+		AEGP_ColorProfileP	*color_profilePP);				// << caller must dispose with AEGP_DisposeColorProfile
+		
+	SPAPI	A_Err (*AEGP_GetNewColorProfileFromICCProfile)(
+		AEGP_PluginID		aegp_plugin_id,		// >>
+		A_long				icc_sizeL,			// >>	icc profile size
+		const	void		*icc_dataPV,		// >>	icc profile
+		AEGP_ColorProfileP	*color_profilePP);	// <<	builds AEGP_ColorProfile from icc profile; caller must dispose with AEGP_DisposeColorProfile
+		
+	SPAPI	A_Err (*AEGP_GetNewICCProfileFromColorProfile)(
+		AEGP_PluginID			aegp_plugin_id,		// >>
+		AEGP_ConstColorProfileP	color_profileP,		// >>
+		AEGP_MemHandle			*icc_profilePH);	// <<	extract icc profile from AEGP_ColorProfile; caller must dispose with AEGP_FreeMemHandle
+		
+	SPAPI	A_Err (*AEGP_GetNewColorProfileDescription)(
+		AEGP_PluginID			aegp_plugin_id,		// >>
+		AEGP_ConstColorProfileP	color_profileP,		// >>
+		AEGP_MemHandle			*unicode_descPH);	// <<	handle of A_UTF16Char (contains null terminated UTF16 string); must be disposed with AEGP_FreeMemHandle
+		
+	SPAPI	A_Err (*AEGP_DisposeColorProfile)(
+		AEGP_ColorProfileP	color_profileP);	// >>
+		
+	SPAPI	A_Err (*AEGP_GetColorProfileApproximateGamma)(
+		AEGP_ConstColorProfileP	color_profileP,		// >>
+		A_FpShort				*approx_gammaP);	// <<
+		
+	SPAPI	A_Err (*AEGP_IsRGBColorProfile)(
+		AEGP_ConstColorProfileP	color_profileP,		// <<
+		A_Boolean				*is_rgbPB);			// >>
+	
+	SPAPI	A_Err (*AEGP_SetWorkingColorSpace)(
+		AEGP_PluginID			aegp_plugin_id,
+		AEGP_CompH				compH,				// >>
+		AEGP_ConstColorProfileP	color_profileP);	// >>
+} AEGP_ColorSettingsSuite3;
+
+#define kAEGPColorSettingsSuiteVersion4	5	// frozen in AE 22.6; get OCIO Color information
+typedef struct AEGP_ColorSettingsSuite4 {
+
+	 SPAPI	A_Err (*AEGP_GetBlendingTables)(
+		PR_RenderContextH 		render_contextH,
+		PF_EffectBlendingTables *blending_tables);
+		
+	SPAPI	A_Err (*AEGP_DoesViewHaveColorSpaceXform)(
+		AEGP_ItemViewP	viewP,			// >>
+		A_Boolean		*has_xformPB);	// <<
+		
+	SPAPI	A_Err (*AEGP_XformWorkingToViewColorSpace)(
+		AEGP_ItemViewP	viewP,		// >>
+		AEGP_WorldH		srcH,		// in
+		AEGP_WorldH		dstH);		// out; must be the same size (can be the same as source)
+		
+	SPAPI	A_Err (*AEGP_GetNewWorkingSpaceColorProfile)(
+		AEGP_PluginID		aegp_plugin_id,					// >>
+		AEGP_CompH			compH,							// >>
+		AEGP_ColorProfileP	*color_profilePP);				// << caller must dispose with AEGP_DisposeColorProfile
+		
+	SPAPI	A_Err (*AEGP_GetNewColorProfileFromICCProfile)(
+		AEGP_PluginID		aegp_plugin_id,		// >>
+		A_long				icc_sizeL,			// >>	icc profile size
+		const	void		*icc_dataPV,		// >>	icc profile
+		AEGP_ColorProfileP	*color_profilePP);	// <<	builds AEGP_ColorProfile from icc profile; caller must dispose with AEGP_DisposeColorProfile
+		
+	SPAPI	A_Err (*AEGP_GetNewICCProfileFromColorProfile)(
+		AEGP_PluginID			aegp_plugin_id,		// >>
+		AEGP_ConstColorProfileP	color_profileP,		// >>
+		AEGP_MemHandle			*icc_profilePH);	// <<	extract icc profile from AEGP_ColorProfile; caller must dispose with AEGP_FreeMemHandle
+		
+	SPAPI	A_Err (*AEGP_GetNewColorProfileDescription)(
+		AEGP_PluginID			aegp_plugin_id,		// >>
+		AEGP_ConstColorProfileP	color_profileP,		// >>
+		AEGP_MemHandle			*unicode_descPH);	// <<	handle of A_UTF16Char (contains null terminated UTF16 string); must be disposed with AEGP_FreeMemHandle
+		
+	SPAPI	A_Err (*AEGP_DisposeColorProfile)(
+		AEGP_ColorProfileP	color_profileP);	// >>
+		
+	SPAPI	A_Err (*AEGP_GetColorProfileApproximateGamma)(
+		AEGP_ConstColorProfileP	color_profileP,		// >>
+		A_FpShort				*approx_gammaP);	// <<
+		
+	SPAPI	A_Err (*AEGP_IsRGBColorProfile)(
+		AEGP_ConstColorProfileP	color_profileP,		// <<
+		A_Boolean				*is_rgbPB);			// >>
+	
+	SPAPI	A_Err (*AEGP_SetWorkingColorSpace)(
+		AEGP_PluginID			aegp_plugin_id,
+		AEGP_CompH				compH,				// >>
+		AEGP_ConstColorProfileP	color_profileP);	// >>
+		
+	SPAPI	A_Err (*AEGP_IsOCIOColorManagementUsed)(
+		AEGP_PluginID			aegp_plugin_id,					// >>
+		A_Boolean				*is_OCIOColorManagementUsedPB);	// <<
+
+	SPAPI	A_Err (*AEGP_GetOCIOConfigurationFile)(
+		AEGP_PluginID			aegp_plugin_id,		// >>
+		AEGP_MemHandle			*config_filePH);	// <<
+} AEGP_ColorSettingsSuite4;
 
 #define kAEGPMarkerSuiteVersion1		1 /* frozen in AE 8.0 */
 

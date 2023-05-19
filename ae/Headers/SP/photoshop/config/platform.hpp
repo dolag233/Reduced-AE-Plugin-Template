@@ -81,9 +81,9 @@
 
 // REVISIT (sparent) : This also come from Switches.h... sometimes. Untangle
 
-// #ifndef MSWindows
+//#ifndef MSWindows
 //  #define MSWindows (PHOTOSHOP_PLATFORM(MICROSOFT))
-// #endif
+//#endif
 
 // Macintosh is only defined for apple platforms
 #if PHOTOSHOP_PLATFORM(APPLE) && !defined(Macintosh)

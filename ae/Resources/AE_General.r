@@ -540,6 +540,21 @@ type 'PiPL'
 				longint = 0;
 				longint = 4;
 				longint;
+
+			case AE_Effect_Support_URL:
+				longint = '8BIM';
+				key longint = 'eURL';
+				longint = 0;
+#if DeRez
+				fill long;
+#else
+				longint = (supportURLEnd[$$ArrayIndex(properties)] - supportURLStart[$$ArrayIndex(properties)]) / 8;
+#endif
+			  supportURLStart:
+				pstring;
+			  supportURLEnd:
+				align long;
+
 			};
 		};
 	};
