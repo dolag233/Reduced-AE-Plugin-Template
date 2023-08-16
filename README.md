@@ -16,6 +16,6 @@ This is a reduced AE plugin template to replace the Skeleton in the AE SDK. You 
 
 + Windows only!
 + Use October2021 SDK in the master branch, other visions are available in other branches.
-+ Use Visual Studio 2019.
++ Use Visual Studio 2022.
 + Use Clang by default.
-+ If you want to change the plugin and project name, you should pay attention to Name and AE_Effect_Match_Name  in PiPL, name of the source file and #include statement, name of the vcxproj and configuration, name of the solution, project and solution name within .sln file.
++ If you want to change the plugin and project name, you should pay attention to Name and AE_Effect_Match_Name in PiPL, name of the source file and #include statement, name of the vcxproj and configuration, name of the solution, project and solution name within .sln file.
