@@ -42,4 +42,9 @@
       <Filter>PiPL</Filter>
     </CustomBuild>
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PiPL.rc">
+      <Filter>PiPL</Filter>
+    </ResourceCompile>
+  </ItemGroup>
 </Project>
